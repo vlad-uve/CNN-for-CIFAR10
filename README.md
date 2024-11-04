@@ -12,3 +12,10 @@ kernel size is 5x5 because the input is 32x32
 
 
  #Choosing not to incorporate a pooling layer after the initial convolution layer 
+
+
+regularization techniques
+
+#Above model was inspired by Alexnet but several changes were put in place in order to improve accuracy.
+#The changes were aimed at reducing complexity and also considering the initial data size - and how this flowed through the model
+#Added batch normalization and dropouts in several points throughout the model to help improve results.
