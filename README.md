@@ -2,7 +2,7 @@
 ## Project Overview
 
 
-## Data
+## Data Used
 This project was created for the course "YCBS 258 - Practical Machine Learning" at Mcgill University
 
 Alexnet architecture was chosen as a reference for the architecture of the model, but significantly simplified
@@ -14,6 +14,11 @@ alexnet is aimed improve accuracy
 Alexnet architecture was chosen as a reference for the architecture of the model, but significantly simplified due to the platform limitations and task scope
 
 kernel size is 5x5 because the input is 32x32
+
+## Model Created
+
+## Results
+
 
 
  #Choosing not to incorporate a pooling layer after the initial convolution layer 
@@ -56,3 +61,5 @@ Finally, I used kernel 1x1 and only 1 convolution in the last convolution sequan
 During the training stage, I realized that the usage of batch normalization and dropout rate was necessary to improve learning speed and handlle with overfitting that apparently occurs because of the simplicity. The achieved acuracy is 0.8091, validation accuracy is 0.7988 and test accuracy 0.7797. As the difference between the accuracy values is not significant, hence, the overfitting was avoided.
 
 "Adam" optimizer was chosen as it demonstrated better performance in terms of val_Accuracy. Moreover, a model with smaller batch size showed better results. Furthermore, schedules for learning rate were used to assit the model disrupt a plateau of constant accuracy.
+
+
