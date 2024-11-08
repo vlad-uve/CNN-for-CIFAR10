@@ -1,19 +1,15 @@
 # Implementation of CNN to Classify CIFAR-10 Images
 ## Project Overview
 
-This project was created for the course "YCBS 258 - Practical Machine Learning" at Mcgill University. This coure aimed implementation of a CNN model for classification of images from CIFAR-10 data set in Google Collab environment. 
+This project was created for the course "YCBS 258 - Practical Machine Learning" at Mcgill University. This coure aimed implementation of a CNN model for classification of images from CIFAR-10 data set in Google Collab environment. Target model accuracy to achieve was 0.8. AlexNet's architecture was chosen as a reference for an architecture of the model to improve accuracy, but with certain simplifications due to the platform limitations and the problem scope. In addition, certain regularization techniques were incorporated to  
 
 
 
 ## Data Used
 
-Alexnet architecture was chosen as a reference for the architecture of the model, but significantly simplified
 
-Task scope implies simplifications as well
 
-alexnet is aimed improve accuracy
 
-Alexnet architecture was chosen as a reference for the architecture of the model, but significantly simplified due to the platform limitations and task scope
 
 kernel size is 5x5 because the input is 32x32
 
