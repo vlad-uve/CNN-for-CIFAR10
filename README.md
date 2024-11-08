@@ -1,17 +1,25 @@
 # Implementation of CNN to Classify CIFAR-10 Images
 ## Project Overview
 
-This project was created for the course "YCBS 258 - Practical Machine Learning" at Mcgill University. This coure aimed implementation of a CNN model for classification of images from CIFAR-10 data set in Google Collab environment. Target model accuracy to achieve was 0.8. AlexNet's architecture was chosen as a reference for an architecture of the model to improve accuracy, but with certain simplifications due to the platform limitations and the problem scope. In addition, certain regularization techniques were incorporated to  
-
-
+This project was created for the course "YCBS 258 - Practical Machine Learning" at Mcgill University. This coure aimed implementation of a CNN model for classification of images from CIFAR-10 data set in Google Collab environment. Target model accuracy to achieve was at least 0.8. AlexNet's architecture was chosen as a reference for an architecture of the model to improve accuracy, but with certain simplifications due to the platform limitations and the problem scope. In addition, certain regularization techniques were incorporated to prevent overfitting. 
 
 ## Data Used
 
+CIFAR-10 is a set of images where each image is 32x32 pixels in size and is encoded with 3 color channels. It consists of 10 mitually exclusive classes: 'aiplane', 'automobile', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck'. Each class is represented by 5,000 training samples and by 1,000 testing samples. That is, there are 60,0000 indices in total (https://www.cs.toronto.edu/~kriz/cifar.html). CIFAR-10 data set was downloaded directly from Keras (https://keras.io/api/datasets/cifar10/). 
+
+```python
+(x_train, y_train), (x_test, y_test) = keras.datasets.cifar10.load_data()
+```
+
+First 5 images of each class are represented in figure below.
+
+![image](https://github.com/user-attachments/assets/a9cd3358-5b42-4aef-9655-25165692d17c)
 
 
 
 
-kernel size is 5x5 because the input is 32x32
+
+
 
 ## Model Created
 
