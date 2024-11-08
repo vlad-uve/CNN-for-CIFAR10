@@ -23,13 +23,20 @@ First 5 images of each class are represented in figure below.
 
 ## Model Created
 
-A CNN model was defined using the Keras Functional API, with an architecture inspired by AlexNet to enhance performance (https://en.wikipedia.org/wiki/AlexNet#:~:text=AlexNet%20is%20the%20name%20of,D.). Since the CIFAR-10 images are lower in resolution than those for classification of which AlexNet model was initially developped, and in the view that the platform, Google Collab, provides ristricted capacities, the CNN atchitecture was subjected to simplification and complexity reduction: 
+A CNN model was defined using the Keras Functional API, with an architecture inspired by AlexNet to enhance performance (https://en.wikipedia.org/wiki/AlexNet#:~:text=AlexNet%20is%20the%20name%20of,D.). Since the CIFAR-10 images are lower in resolution than those for classification of which AlexNet model was initially developped, and in the view that the platform, Google Collab, provides ristricted capacities, the CNN atchitecture was subjected to certain changes aimed to reduce the model complexity and size: 
 
-* The kernel size is reduced to 5x5 and 3x3 windows
+* The kernel size is reduced to 5x5 and 3x3 windows (resolution is lower and data set size)
 * The number of filters is reduced to 32, 96 and 256
 * The stride size is 1
+* The number of convolution layers is reduced to 4
+* The number of fully conncected (dense) layers is reduced to 2
 
+The following regularization methods were used to avoid overfitting and to enhance accuracy of the model:
+* Batchnormalization
+* Drop out
 
+Hyperparameters:
+* Gradient??
 
 
 ```python
@@ -113,34 +120,31 @@ def CNN_model():
   return model
  ```    
 
+![image](https://github.com/user-attachments/assets/c8a52f97-b356-4b55-940b-bec793cd5d27)
 
+
+
+## Model Trained
+
+
+![image](https://github.com/user-attachments/assets/d03dfe7b-e4ed-4786-9509-2ece25337b73)
+
+
+
+
+
+## Model Tested
+
+Testing Accuracy = 0.83
+Testing Loss = 0.80
+
+
+![image](https://github.com/user-attachments/assets/42de68fe-8dd8-46ab-b1ae-115cb844a83e)
 
 
 
 ## Results
 
-
-
- #Choosing not to incorporate a pooling layer after the initial convolution layer 
-
-
-regularization techniques
-
-#Above model was inspired by Alexnet but several changes were put in place in order to improve accuracy.
-#The changes were aimed at reducing complexity and also considering the initial data size - and how this flowed through the model
-#Added batch normalization and dropouts in several points throughout the model to help improve results.
-
-
-# Assignment
-Build the AlexNet architecture and train it on the CIFAR10 dataset.
-
-You may resize some of the kernel sizes (mainly the first one) and the number of kernels because CIFAR100 is a smaller dataset than ImageNet, as well as lower-resolution (32x32 vs 224x224).
-
-You may resize the number of kernels used per layer if it speeds up training and/or preserves accuracy. The exact AlexNet architecture and number of units will not work.
-
-Report training, validation and test errors. Which hyperparameters did you change to improve performance?
-
-**MAKE SURE YOU USE A GPU!** Top menu select "Runtime", then "Runtime Type". Make sure "Hardware Accelerator" has the option "GPU" selected.
 
 Tips:
 - Start with only a few of a layers and check if the network can learn.
