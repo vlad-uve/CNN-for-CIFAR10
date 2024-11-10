@@ -60,12 +60,28 @@ print('New shape of the training class set: {}'.format(y_train.shape)) #(50000, 
 print('New shape of the testing class set: {}'.format(y_test.shape)) #(1000, 10)
 ```
 ## Model Architecture
+For this project, we implemented a Convolutional Neural Network (CNN) inspired by a simplified version of AlexNet (https://en.wikipedia.org/wiki/AlexNet#:~:text=AlexNet%20is%20the%20name%20of,D.), tailored for efficient image classification on the CIFAR-10 dataset. The architecture was carefully designed to balance model performance and computational efficiency, taking into account the lower resolution of CIFAR-10 images and the restricted capacities of the Google Colab platform. 
 
-For this project, we implemented a Convolutional Neural Network (CNN) based on a simplified version of AlexNet. The CNN architecture was designed to efficiently classify images from the CIFAR-10 dataset. The model consists of several layers, including convolutional layers, activation functions, pooling layers, and fully connected layers. Below is an overview of the architecture:
 
-A Convolutional Neural Network (CNN) was defined using the Keras Functional API, inspired by the architecture of AlexNet to boost performance (AlexNet on Wikipedia). Given that the CIFAR-10 images have a lower resolution compared to those AlexNet was originally designed for, and considering the restricted computational resources provided by Google Colab, the architecture was adapted to reduce complexity and model size while maintaining effectiveness for image classification.
+Reduced kernel sizes: The kernel sizes are set to 5x5 and 3x3 windows due to the lower resolution of the CIFAR-10 images and the dataset's relatively small size.
+Reduced number of filters: The number of filters in the convolutional layers was reduced to 32, 96, and 256 filters to optimize computational efficiency.
+Stride size: A stride size of 1 was used in the convolution layers to preserve spatial resolution.
+Reduced number of convolutional layers: The architecture was simplified by reducing the number of convolutional layers to 4, in contrast to AlexNet’s deeper architecture.
+Reduced number of fully connected layers: The number of fully connected (dense) layers was reduced to 2, compared to the original AlexNet design.
+The following regularization methods were incorporated to help avoid overfitting and enhance the accuracy of the model:
 
-(https://en.wikipedia.org/wiki/AlexNet#:~:text=AlexNet%20is%20the%20name%20of,D.)
+Batch Normalization: This technique normalizes the activations of the previous layer at each mini-batch, which helps speed up training and stabilize the learning process.
+Dropout: A dropout rate of 0.5 was applied to the fully connected layers, randomly setting half of the neurons to zero during training to prevent overfitting.
+
+
+The CNN model was defined using the Keras Functional API, it consists of multiple layers, including convolutional layers, activation functions, pooling layers, and fully connected layers. Below is a detailed overview of the model architecture:
+
+### Input layer
+
+```python
+#Define the input layer suitable for 32x32 RGB images
+inputs=Input(shape=(32,32,3), name='Input_Data')
+```
 
 * The kernel size is reduced to 5x5 and 3x3 windows (resolution is lower and data set size)
 * The number of filters is reduced to 32, 96 and 256
