@@ -49,8 +49,7 @@ In this step, to ensure optimal training performance, CIFAR-10 dataset is prepar
 x_train=x_train/255. #normalaized training image set
 x_test=x_test/255. #normalaized testing image set
 ```
-2. One-Hot Encoding of Class Labels: The CIFAR-10 labels are integers that represent the 10 classes (e.g., 0 for airplane, 1 for automobile, etc.). However, neural networks require the class labels to be in a binary format, hence, the labels are concerted into a binary matrix using one-hot encoding. This prevents the model from assuming an ordinal relationship between the classes and ensures that the model learns to distinguish each class independently.
-
+2. One-Hot Encoding of Class Labels: The CIFAR-10 labels are integers that represent the 10 classes (e.g., 0 for airplane, 1 for automobile, etc.). However, neural networks require the class labels to be in a binary format. To achieve this, the labels are converted into a binary matrix using one-hot encoding. Each label is represented as a binary vector with 10 elements, corresponding to the 10 classes in the CIFAR-10 dataset. In this vector, a 1 is placed in the position of the correct class, and all other positions are filled with 0s. This approach prevents the model from assuming any ordinal relationship between the classes and ensures it learns to distinguish each class independently. As a result, the new shape of the encoded Training Labels set and Test Labels set are (50000, 10) and (10000, 10), respectively.
 ```python
 #Convert class integers into binary matrix
 y_train=to_categorical(y_train,10) #encoded training class set
@@ -60,14 +59,13 @@ y_test=to_categorical(y_test,10) #encoded testing class set
 print('New shape of the training class set: {}'.format(y_train.shape)) #(50000, 10)
 print('New shape of the testing class set: {}'.format(y_test.shape)) #(1000, 10)
 ```
-The new shape of the encoded training labels and test labels is (50000, 10) and (10000, 10), respectively. Each label is a one-hot encoded binary vector, where each vector represents the class of an image. The vector has 10 elements corresponding to the 10 classes in the CIFAR-10 dataset, with a 1 in the position of the correct class and 0s in all other positions. For instance, if the label is for a frog (class 6), the one-hot encoded vector would be [0. 0. 0. 0. 0. 0. 1. 0. 0. 0.].
-
 ## Model Architecture
 
+For this project, we implemented a Convolutional Neural Network (CNN) based on a simplified version of AlexNet. The CNN architecture was designed to efficiently classify images from the CIFAR-10 dataset. The model consists of several layers, including convolutional layers, activation functions, pooling layers, and fully connected layers. Below is an overview of the architecture:
 
+A Convolutional Neural Network (CNN) was defined using the Keras Functional API, inspired by the architecture of AlexNet to boost performance (AlexNet on Wikipedia). Given that the CIFAR-10 images have a lower resolution compared to those AlexNet was originally designed for, and considering the restricted computational resources provided by Google Colab, the architecture was adapted to reduce complexity and model size while maintaining effectiveness for image classification.
 
-
-A CNN model was defined using the Keras Functional API, with an architecture inspired by AlexNet to enhance performance (https://en.wikipedia.org/wiki/AlexNet#:~:text=AlexNet%20is%20the%20name%20of,D.). Since the CIFAR-10 images are lower in resolution than those for classification of which AlexNet model was initially developped, and in the view that the platform, Google Collab, provides ristricted capacities, the CNN atchitecture was subjected to certain changes aimed to reduce the model complexity and size: 
+(https://en.wikipedia.org/wiki/AlexNet#:~:text=AlexNet%20is%20the%20name%20of,D.)
 
 * The kernel size is reduced to 5x5 and 3x3 windows (resolution is lower and data set size)
 * The number of filters is reduced to 32, 96 and 256
