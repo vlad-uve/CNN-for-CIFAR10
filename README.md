@@ -20,13 +20,11 @@ from tensorflow import keras
 (x_train, y_train), (x_test, y_test) = keras.datasets.cifar10.load_data()
 ```
 ### Exploring the Shapes
-The dataset consists of both images and labels, which are stored in arrays with the following shapes:
+The downloaded dataset consists of both images and labels, which are stored in arrays with the following shapes:
 * Training data (x_train): A NumPy array of shape (50000, 32, 32, 3), where 50,000 images are 32x32 pixels in size with 3 color channels (RGB).
 * Training labels (y_train): A NumPy array of shape (50000, 1), containing the labels for each image (0 to 9 for the 10 classes).
 * Test data (x_test): A NumPy array of shape (10000, 32, 32, 3), containing the 10,000 test images, also 32x32 pixels with 3 color channels.
 * Test labels (y_test): A NumPy array of shape (10000, 1), containing the corresponding labels for the test set.
-
-WRITE ABOUT SHAPES and INPUT AND OUTPUT SIZES!!!
 
 ```python
 #Print shape of the training data set
@@ -52,24 +50,22 @@ x_train=x_train/255. #normalaized training image set
 x_test=x_test/255. #normalaized testing image set
 ```
 2. One-Hot Encoding of Class Labels: The CIFAR-10 labels are integers that represent the 10 classes (e.g., 0 for airplane, 1 for automobile, etc.). However, neural networks require the class labels to be in a binary format, hence, the labels are concerted into a binary matrix using one-hot encoding. This prevents the model from assuming an ordinal relationship between the classes and ensures that the model learns to distinguish each class independently.
+
 ```python
 #Convert class integers into binary matrix
 y_train=to_categorical(y_train,10) #encoded training class set
 y_test=to_categorical(y_test,10) #encoded testing class set
+
+#Print new shape of training and testing class sets
+print('New shape of the training class set: {}'.format(y_train.shape)) #(50000, 10)
+print('New shape of the testing class set: {}'.format(y_test.shape)) #(1000, 10)
 ```
+The new shape of the encoded training labels and test labels is (50000, 10) and (10000, 10), respectively. Each label is a one-hot encoded binary vector, where each vector represents the class of an image. The vector has 10 elements corresponding to the 10 classes in the CIFAR-10 dataset, with a 1 in the position of the correct class and 0s in all other positions. For instance, if the label is for a frog (class 6), the one-hot encoded vector would be [0. 0. 0. 0. 0. 0. 1. 0. 0. 0.].
+
+## Model Architecture
 
 
 
-
-
-
-
-
-
-
-
-
-## Model Created
 
 A CNN model was defined using the Keras Functional API, with an architecture inspired by AlexNet to enhance performance (https://en.wikipedia.org/wiki/AlexNet#:~:text=AlexNet%20is%20the%20name%20of,D.). Since the CIFAR-10 images are lower in resolution than those for classification of which AlexNet model was initially developped, and in the view that the platform, Google Collab, provides ristricted capacities, the CNN atchitecture was subjected to certain changes aimed to reduce the model complexity and size: 
 
