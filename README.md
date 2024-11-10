@@ -18,7 +18,17 @@ from tensorflow import keras
 #x_train and y_train are the training data set
 #x_test and y_test are the testing data set
 (x_train, y_train), (x_test, y_test) = keras.datasets.cifar10.load_data()
+```
+### Exploring the Shapes
+The dataset consists of both images and labels, which are stored in arrays with the following shapes:
+* Training data (x_train): A NumPy array of shape (50000, 32, 32, 3), where 50,000 images are 32x32 pixels in size with 3 color channels (RGB).
+* Training labels (y_train): A NumPy array of shape (50000, 1), containing the labels for each image (0 to 9 for the 10 classes).
+* Test data (x_test): A NumPy array of shape (10000, 32, 32, 3), containing the 10,000 test images, also 32x32 pixels with 3 color channels.
+* Test labels (y_test): A NumPy array of shape (10000, 1), containing the corresponding labels for the test set.
 
+WRITE ABOUT SHAPES and INPUT AND OUTPUT SIZES!!!
+
+```python
 #Print shape of the training data set
 print('Shape of the training image set: {}'.format(x_train.shape)) #(50000, 32, 32, 3)
 print('Shape of the training classe set: {}'.format(y_train.shape)) #(50000, 1)
@@ -27,28 +37,31 @@ print('Shape of the training classe set: {}'.format(y_train.shape)) #(50000, 1)
 print('Shape of the testing image set: {}'.format(x_test.shape)) #(10000, 32, 32, 3)
 print('Shape of the testing classe set: {}'.format(y_test.shape)) #(10000, 1)
 ```
-The dataset consists of both images and labels, which are stored in arrays with the following shapes:
-* Training data (x_train): A NumPy array of shape (50000, 32, 32, 3), where 50,000 images are 32x32 pixels in size with 3 color channels (RGB).
-* Training labels (y_train): A NumPy array of shape (50000, 1), containing the labels for each image (0 to 9 for the 10 classes).
-* Test data (x_test): A NumPy array of shape (10000, 32, 32, 3), containing the 10,000 test images, also 32x32 pixels with 3 color channels.
-* Test labels (y_test): A NumPy array of shape (10000, 1), with the corresponding labels for the test set.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-First 5 images of each class are represented in figure below.
-
+### Displaying Sample Images
+To better understand the dataset, the following visualization displays the first 5 sample images of each class from the CIFAR-10 training set, along with their corresponding class labels.
 ![image](https://github.com/user-attachments/assets/a9cd3358-5b42-4aef-9655-25165692d17c)
+
+### Preprocessing
+In this step, to ensure optimal training performance, CIFAR-10 dataset is prepared for training by performing the following key operations:
+
+1. Normalizing the Image Data: The pixel values of the images are scaled from the range [0, 255] to [0, 1]. This step improves model convergence and stability during training.
+```python
+#Data normalization
+x_train=x_train/255. #normalaized training image set
+x_test=x_test/255. #normalaized testing image set
+```
+2. One-Hot Encoding of Class Labels: The CIFAR-10 labels are integers that represent the 10 classes (e.g., 0 for airplane, 1 for automobile, etc.). However, neural networks require the class labels to be in a binary format, hence, the labels are concerted into a binary matrix using one-hot encoding. This prevents the model from assuming an ordinal relationship between the classes and ensures that the model learns to distinguish each class independently.
+```python
+#Convert class integers into binary matrix
+y_train=to_categorical(y_train,10) #encoded training class set
+y_test=to_categorical(y_test,10) #encoded testing class set
+```
+
+
+
+
+
 
 
 
