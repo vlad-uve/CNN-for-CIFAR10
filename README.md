@@ -5,13 +5,46 @@ This project was develoed as part of **the YCBS 258 - Practical Machine Learning
 
 The model architecture was inspired by AlexNet to achieve high performance, chosen for its proven effectivness in image classification tasks, however, with adjustments and simplifications made to fit the capacity constrains of the platform and the scope of the problem. To further enhance model performance and mitigate overfitting, several regularization techniques were applied. This implementation demonstrates the application of deep learning techniques for image classification tasks, emphasizing both architectural adaptation and performance optimization within resource limitations.
 
-## Data Used
+## Dataset Description
 
-CIFAR-10 is a set of images where each image is 32x32 pixels in size and is encoded with 3 color channels. It consists of 10 mitually exclusive classes: 'aiplane', 'automobile', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck'. Each class is represented by 5,000 training samples and by 1,000 testing samples. That is, there are 60,0000 indices in total (https://www.cs.toronto.edu/~kriz/cifar.html). CIFAR-10 data set was downloaded directly from Keras (https://keras.io/api/datasets/cifar10/). 
+The model was trained and evaluated on the CIFAR-10 dataset, a widely used benchmark collection of color images for classification tasks. It consists of 60,000 color images, each 32x32 pixels in size, encoded with 3 color channels (RGB). The dataset is divided into 50,000 training images and 10,000 testing images. The images are equally distributed among 10 mutually exclusive classes: airplane, automobile, bird, cat, deer, dog, frog, horse, ship, and truck. Each class contains 5,000 training samples and 1,000 testing samples. For more details, refer to the CIFAR-10 official page (https://www.cs.toronto.edu/~kriz/cifar.html).
 
+### Loading the CIFAR-10 Dataset
+For this project, the CIFAR-10 dataset was downloaded directly from Keras (https://keras.io/api/datasets/cifar10/). 
 ```python
+from tensorflow import keras
+
+#Load train and test CIFAR-10 data set from Keras
+#x_train and y_train are the training data set
+#x_test and y_test are the testing data set
 (x_train, y_train), (x_test, y_test) = keras.datasets.cifar10.load_data()
+
+#Print shape of the training data set
+print('Shape of the training image set: {}'.format(x_train.shape)) #(50000, 32, 32, 3)
+print('Shape of the training classe set: {}'.format(y_train.shape)) #(50000, 1)
+
+#Print shape of the testing data set
+print('Shape of the testing image set: {}'.format(x_test.shape)) #(10000, 32, 32, 3)
+print('Shape of the testing classe set: {}'.format(y_test.shape)) #(10000, 1)
 ```
+The dataset consists of both images and labels, which are stored in arrays with the following shapes:
+* Training data (x_train): A NumPy array of shape (50000, 32, 32, 3), where 50,000 images are 32x32 pixels in size with 3 color channels (RGB).
+* Training labels (y_train): A NumPy array of shape (50000, 1), containing the labels for each image (0 to 9 for the 10 classes).
+* Test data (x_test): A NumPy array of shape (10000, 32, 32, 3), containing the 10,000 test images, also 32x32 pixels with 3 color channels.
+* Test labels (y_test): A NumPy array of shape (10000, 1), with the corresponding labels for the test set.
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 First 5 images of each class are represented in figure below.
 
