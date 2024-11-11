@@ -61,6 +61,11 @@ print('New shape of the testing class set: {}'.format(y_test.shape)) #(1000, 10)
 ```
 ## Model Architecture
 For this project, we implemented a Convolutional Neural Network (CNN) inspired by a simplified version of AlexNet (https://en.wikipedia.org/wiki/AlexNet#:~:text=AlexNet%20is%20the%20name%20of,D.), tailored for efficient image classification on the CIFAR-10 dataset. Given that CIFAR-10 images have a lower resolution than those used in AlexNet’s original classification tasks, the CNN architecture was modified to reduce model complexity and size. The design carefully balanced model performance with computational efficiency, taking into account the limited resources of the Google Colab platform. Key modifications include:
+* Reduced kernel sizes
+* Fewer number of filters
+* Small stride size
+* Fewer convolutional layers
+* Fewer fully connected layers
 
 * Reduced kernel sizes: The kernel sizes are set to 5x5 and 3x3 windows due to the lower resolution of the CIFAR-10 images and the dataset's relatively small size.
 * Fewer number of filters: The number of filters in the convolutional layers was reduced to 32, 96, and 256 filters to optimize computational efficiency.
@@ -69,6 +74,9 @@ For this project, we implemented a Convolutional Neural Network (CNN) inspired b
 * Fewer fully connected layers: The number of fully connected (dense) layers was reduced to 2 from the original AlexNet design to further decrease model size and complexity.
 
 The following regularization methods were incorporated to minimize overfitting and enhance the model's accuracy:
+* Batch Normalization
+* Dropout
+* Early Stopping
 
 * Batch Normalization: This technique normalizes activations for each mini-batch, speeding up and stabilizing training by reducing internal covariate shifts.
 * Dropout: A 0.4 dropout rate was used on fully connected layers, randomly setting 40% of neurons to zero during training to prevent over-reliance on specific nodes and encourage robust feature learning.
@@ -78,15 +86,15 @@ The CNN model was defined using the Keras Functional API, it consists of multipl
 
 ### Input Layer
 
-The input to the model is a batch of images with a shape of (32, 32, 3) (32x32 pixels with 3 color channels, RGB), as specified by the CIFAR-10 dataset.
-
+The input to the model is a batch of images with a shape of (32, 32, 3), i.e., 32x32 pixels with 3 color channels, RGB, as specified by the CIFAR-10 dataset and seen from the training image and testing image sets.
+ 
 ```python
 #Define the input layer suitable for 32x32 RGB images
 inputs=Input(shape=(32,32,3), name='Input_Data')
 ```
 
 ### Convolution Layer 1
-
+The first convolutional layer uses 32 filters with a 5x5 kernel size and 1x1 strides. This layer serves to extract fundamental features such as edges, corners, textures, and color gradients, which form the building blocks for deeper layers to build more complex representations. In contrast to AlexNet's original design, which processes high-resolution 227x227x3 images using an 11x11 kernel with 4 strides to significantly reduce spatial dimensions and capture large patterns, our approach adapts to the smaller 32x32x3 CIFAR-10 images. To maintain efficiency without excessive downscaling, we reduced the kernel size from 11x11 to 5x5 and set a stride of 1, ensuring appropriate feature extraction tailored to the lower-resolution input.
 
 ```python
 #First convolution layer with 32 filters, 5x5 kernel size, and 1x1 strides
