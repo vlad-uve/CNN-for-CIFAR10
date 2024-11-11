@@ -76,109 +76,103 @@ The following regularization methods were incorporated to minimize overfitting a
 
 The CNN model was defined using the Keras Functional API, it consists of multiple layers, including convolutional layers, activation functions, pooling layers, and fully connected layers. Below is a detailed overview of the model architecture:
 
-### Input layer
+### Input Layer
+
+The input to the model is a batch of images with a shape of (32, 32, 3) (32x32 pixels with 3 color channels, RGB), as specified by the CIFAR-10 dataset.
 
 ```python
 #Define the input layer suitable for 32x32 RGB images
 inputs=Input(shape=(32,32,3), name='Input_Data')
 ```
 
-* The kernel size is reduced to 5x5 and 3x3 windows (resolution is lower and data set size)
-* The number of filters is reduced to 32, 96 and 256
-* The stride size is 1
-* The number of convolution layers is reduced to 4
-* The number of fully conncected (dense) layers is reduced to 2
-
-The following regularization methods were used to avoid overfitting and to enhance accuracy of the model:
-* Batchnormalization
-* Drop out
-
-Hyperparameters:
-* Gradient??
+### Convolution Layer 1
 
 
 ```python
-def CNN_model():
-
-  global tensorboard_callback, earlyStopping_callback
-
-  #Clean logs
-  !rm -rf ./logs/
-
-  #Clear previous session
-  clear_session()
-
-  #Define the input layer suitable for 32x32 RGB images
-  inputs=Input(shape=(32,32,3), name='Input_Data')
-
-  #Define convolution layers below
-  #First convolution layer with 32 filters, 5x5 kernel size, and 1x1 strides
-  t=Conv2D(filters=32, kernel_size=5, strides=1, padding='valid', activation='relu', name='Conv_2D_1' )(inputs)
-  #First batch normalization layer
-  t=BatchNormalization(name='Batch_Norm_1')(t)
-
-  #Second convolution layer with 96 filters, 3x3 kernel size, and 1x1 strides
-  t=Conv2D(filters=96, kernel_size=3, strides=1, padding="same", activation='relu', name='Conv_2D_2')(t)
-  #Second batch normalization layer
-  t=BatchNormalization(name='Batch_Norm_2')(t)
-
-  #First max pooling layer with 3x3 pool size and 2x2 strides
-  t=MaxPooling2D(pool_size=(3,3), strides=2, padding='valid', name='Max_Pool_1')(t)
-  #First drop out layer
-  t=Dropout(rate=0.4, name='Drop_Out_1')(t)
-
-  #Third layer of convolution with 256 filters, 3x3 kernel size, and 1x1 strides
-  t=Conv2D(filters=256, kernel_size=3, strides=1, padding='same', activation='relu', name='Conv_2D_3')(t)
-  #Third batch normalization layer
-  t=BatchNormalization(name='Batch_Norm_3')(t)
-
-  #Forth layer of convolution with 96 filters, 3x3 kernel size, and 1x1 strides
-  t=Conv2D(filters=96, kernel_size=3, strides=1, padding='same', activation='relu', name='Conv_2D_4')(t)
-  #Forth batch normalization layer
-  t=BatchNormalization(name='Batch_Norm_4')(t)
+#First convolution layer with 32 filters, 5x5 kernel size, and 1x1 strides
+t=Conv2D(filters=32, kernel_size=5, strides=1, padding='valid', activation='relu', name='Conv_2D_1' )(inputs)
+#First batch normalization layer
+t=BatchNormalization(name='Batch_Norm_1')(t)
+```
 
 
-  #Second max pooling layer with 3x3 pool size and 2x2 strides
-  t=MaxPooling2D(pool_size=(3,3), strides=2, padding='valid', name='Max_Pool_2')(t)
-  #Second drop out layer
-  t=Dropout(rate=0.4, name='Drop_Out_2')(t)
+### Convolution Layer 2
 
-  #Define first fully connected layer
-  #Flatten layer
-  y1=Flatten(name='Flatten_y1')(t)
-  #Dense layer
-  y1=Dense(4096, activation='relu', kernel_initializer='glorot_uniform', name='Dense_y1')(y1)
-  #Drop out layer
-  y1=Dropout(rate=0.4, name='Drop_Out_y1')(y1)
+```python
+#Second convolution layer with 96 filters, 3x3 kernel size, and 1x1 strides
+t=Conv2D(filters=96, kernel_size=3, strides=1, padding="same", activation='relu', name='Conv_2D_2')(t)
+#Second batch normalization layer
+t=BatchNormalization(name='Batch_Norm_2')(t)
+```
 
-  #Define second fully connected layer
-  #Flatten layer
-  y2=Flatten(name='Flatten_y2')(y1)
-  #Dense layer
-  y2=Dense(4096, activation='relu', kernel_initializer='glorot_uniform', name='Dense_y2')(y2)
-  #Drop out layer
-  y2=Dropout(rate=0.4, name='Drop_Out_y2')(y2)
+### Max Pooling Layer 1
 
-  #Define output layer and model
-  outputs=Dense(10, activation='softmax', name='Output_Model')(y2)
-  model=Model(inputs, outputs)
-
-  #Initialize Tensor Board - logs
-  log_dir = "logs/fit/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-
-  #Define callbacks
-  tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
-  #reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=3, min_lr=0.000001, verbose=1)
-  earlyStopping_callback = EarlyStopping(monitor='val_accuracy', patience=10)
+```python
+#First max pooling layer with 3x3 pool size and 2x2 strides
+t=MaxPooling2D(pool_size=(3,3), strides=2, padding='valid', name='Max_Pool_1')(t)
+#First drop out layer
+t=Dropout(rate=0.4, name='Drop_Out_1')(t)
+```
 
 
-  #Compile Model
-  model.compile(optimizer=Adam(learning_rate=0.0001), loss='categorical_crossentropy', metrics=["accuracy"])
+### Convolution Layer 3
+```python
+#Third layer of convolution with 256 filters, 3x3 kernel size, and 1x1 strides
+t=Conv2D(filters=256, kernel_size=3, strides=1, padding='same', activation='relu', name='Conv_2D_3')(t)
+#Third batch normalization layer
+t=BatchNormalization(name='Batch_Norm_3')(t)
+```
 
-  return model
- ```    
+### Convolution Layer 4
+```python
+#Forth layer of convolution with 96 filters, 3x3 kernel size, and 1x1 strides
+t=Conv2D(filters=96, kernel_size=3, strides=1, padding='same', activation='relu', name='Conv_2D_4')(t)
+#Forth batch normalization layer
+t=BatchNormalization(name='Batch_Norm_4')(t)
+```
 
-![image](https://github.com/user-attachments/assets/c8a52f97-b356-4b55-940b-bec793cd5d27)
+### Max Pooling Layer 2
+```python
+#Second max pooling layer with 3x3 pool size and 2x2 strides
+t=MaxPooling2D(pool_size=(3,3), strides=2, padding='valid', name='Max_Pool_2')(t)
+#Second drop out layer
+t=Dropout(rate=0.4, name='Drop_Out_2')(t)
+```
+
+
+### Fully Connected (Dense) Layer 1
+```python
+#Define first fully connected layer
+#Flatten layer
+y1=Flatten(name='Flatten_y1')(t)
+#Dense layer
+y1=Dense(4096, activation='relu', kernel_initializer='glorot_uniform', name='Dense_y1')(y1)
+#Drop out layer
+y1=Dropout(rate=0.4, name='Drop_Out_y1')(y1)
+```
+
+### Fully Connected (Dense) Layer 2
+```python
+#Define second fully connected layer
+
+#Dense layer
+y2=Dense(4096, activation='relu', kernel_initializer='glorot_uniform', name='Dense_y2')(y2)
+#Drop out layer
+y2=Dropout(rate=0.4, name='Drop_Out_y2')(y2)
+```
+
+### Output Layer
+```python
+#Define output layer and model
+outputs=Dense(10, activation='softmax', name='Output_Model')(y2)
+model=Model(inputs, outputs)
+```
+
+
+
+
+
+
 
 
 
