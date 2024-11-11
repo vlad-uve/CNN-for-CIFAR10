@@ -60,19 +60,19 @@ print('New shape of the training class set: {}'.format(y_train.shape)) #(50000, 
 print('New shape of the testing class set: {}'.format(y_test.shape)) #(1000, 10)
 ```
 ## Model Architecture
-For this project, we implemented a Convolutional Neural Network (CNN) inspired by a simplified version of AlexNet (https://en.wikipedia.org/wiki/AlexNet#:~:text=AlexNet%20is%20the%20name%20of,D.), tailored for efficient image classification on the CIFAR-10 dataset. The architecture was carefully designed to balance model performance and computational efficiency, taking into account the lower resolution of CIFAR-10 images and the restricted capacities of the Google Colab platform. 
+For this project, we implemented a Convolutional Neural Network (CNN) inspired by a simplified version of AlexNet (https://en.wikipedia.org/wiki/AlexNet#:~:text=AlexNet%20is%20the%20name%20of,D.), tailored for efficient image classification on the CIFAR-10 dataset. Given that CIFAR-10 images have a lower resolution than those used in AlexNet’s original classification tasks, the CNN architecture was modified to reduce model complexity and size. The design carefully balanced model performance with computational efficiency, taking into account the limited resources of the Google Colab platform. Key modifications include:
 
+* Reduced kernel sizes: The kernel sizes are set to 5x5 and 3x3 windows due to the lower resolution of the CIFAR-10 images and the dataset's relatively small size.
+* Fewer number of filters: The number of filters in the convolutional layers was reduced to 32, 96, and 256 filters to optimize computational efficiency.
+* Small stride size: A stride size of 1 was used in the convolution layers to preserve spatial resolution of the unput data.
+* Fewer convolutional layers: The architecture was simplified by reducing the number of convolutional layers to 4. This modification, compared to AlexNet's deeper structure, helped decrease both the model size and the number of parameters.
+* Fewer fully connected layers: The number of fully connected (dense) layers was reduced to 2 from the original AlexNet design to further decrease model size and complexity.
 
-Reduced kernel sizes: The kernel sizes are set to 5x5 and 3x3 windows due to the lower resolution of the CIFAR-10 images and the dataset's relatively small size.
-Reduced number of filters: The number of filters in the convolutional layers was reduced to 32, 96, and 256 filters to optimize computational efficiency.
-Stride size: A stride size of 1 was used in the convolution layers to preserve spatial resolution.
-Reduced number of convolutional layers: The architecture was simplified by reducing the number of convolutional layers to 4, in contrast to AlexNet’s deeper architecture.
-Reduced number of fully connected layers: The number of fully connected (dense) layers was reduced to 2, compared to the original AlexNet design.
-The following regularization methods were incorporated to help avoid overfitting and enhance the accuracy of the model:
+The following regularization methods were incorporated to minimize overfitting and enhance the model's accuracy:
 
-Batch Normalization: This technique normalizes the activations of the previous layer at each mini-batch, which helps speed up training and stabilize the learning process.
-Dropout: A dropout rate of 0.5 was applied to the fully connected layers, randomly setting half of the neurons to zero during training to prevent overfitting.
-
+* Batch Normalization: This technique normalizes activations for each mini-batch, speeding up and stabilizing training by reducing internal covariate shifts.
+* Dropout: A 0.4 dropout rate was used on fully connected layers, randomly setting 40% of neurons to zero during training to prevent over-reliance on specific nodes and encourage robust feature learning.
+* Early Stopping: This method monitors the model's performance on a validation data set to halt training once performance begins to deteriorate, preventing it from overfitting and memorizing noise in the training data.
 
 The CNN model was defined using the Keras Functional API, it consists of multiple layers, including convolutional layers, activation functions, pooling layers, and fully connected layers. Below is a detailed overview of the model architecture:
 
