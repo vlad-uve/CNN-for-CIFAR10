@@ -67,9 +67,7 @@ For this project, we implemented a Convolutional Neural Network (CNN) inspired b
 * Fewer convolutional layers
 * Fewer fully connected layers
 
-* Reduced kernel sizes: The kernel sizes are set to 5x5 and 3x3 windows due to the lower resolution of the CIFAR-10 images and the dataset's relatively small size.
-* Fewer number of filters: The number of filters in the convolutional layers was reduced to 32, 96, and 256 filters to optimize computational efficiency.
-* Small stride size: A stride size of 1 was used in the convolution layers to preserve spatial resolution of the unput data.
+
 * Fewer convolutional layers: The architecture was simplified by reducing the number of convolutional layers to 4. This modification, compared to AlexNet's deeper structure, helped decrease both the model size and the number of parameters.
 * Fewer fully connected layers: The number of fully connected (dense) layers was reduced to 2 from the original AlexNet design to further decrease model size and complexity.
 
@@ -87,9 +85,14 @@ The CNN model was defined using the Keras Functional API, it consists of multipl
 ### Input Layer
 
 The input to the model is a batch of images with a shape of (32, 32, 3), i.e., 32x32 pixels with 3 color channels, RGB, as specified by the CIFAR-10 dataset and seen from the training image and testing image sets.
+
+* Reduced kernel sizes: The kernel sizes are set to 5x5 and 3x3 windows due to the lower resolution of the CIFAR-10 images and the dataset's relatively small size.
+* Fewer number of filters: The number of filters in the convolutional layers was reduced to 32, 96, and 256 filters to optimize computational efficiency.
+* Small stride size: A stride size of 1 was used in the convolution layers to preserve spatial resolution of the unput data.
+
  
 ```python
-from keras.layers import Input
+from tensorflow.keras.layers import Input
 
 #Define the input layer suitable for 32x32 RGB images
 inputs=Input(shape=(32,32,3), name='Input_Data')
@@ -97,6 +100,9 @@ inputs=Input(shape=(32,32,3), name='Input_Data')
 
 ### Convolution Layer 1
 The first convolutional layer uses 32 filters with a 5x5 kernel size and 1x1 strides. This layer serves to extract fundamental features such as edges, corners, textures, and color gradients, which form the building blocks for deeper layers to build more complex representations. In contrast to AlexNet's original design, which processes high-resolution 227x227x3 images using an 11x11 kernel with 4 strides to significantly reduce spatial dimensions and capture large patterns, our approach adapts to the smaller 32x32x3 CIFAR-10 images. To maintain efficiency without excessive downscaling, we reduced the kernel size from 11x11 to 5x5 and set a stride of 1, ensuring appropriate feature extraction tailored to the lower-resolution input.
+
+
+As the size of the given data is much less than the AlexNet's input data, i.e., the given images have size 32x32x3 whileas the AlexNet's input is 227x227x3, hence, significant simplification is required. First of all, I reduced the first convolution layer's kernel size from 11x11 to 5x5. Because this layer serves to heavily reduce the input data's dimension, but in our case, it is not required. Similarly, I used 3x3 kernel in the second convolution layer due to the same reason. The smaller kernel size should be a good simplification.
 
 ```python
 from tensorflow.keras.layers import Conv2D, BatchNormalization
