@@ -89,6 +89,8 @@ The CNN model was defined using the Keras Functional API, it consists of multipl
 The input to the model is a batch of images with a shape of (32, 32, 3), i.e., 32x32 pixels with 3 color channels, RGB, as specified by the CIFAR-10 dataset and seen from the training image and testing image sets.
  
 ```python
+from keras.layers import Input
+
 #Define the input layer suitable for 32x32 RGB images
 inputs=Input(shape=(32,32,3), name='Input_Data')
 ```
@@ -97,6 +99,8 @@ inputs=Input(shape=(32,32,3), name='Input_Data')
 The first convolutional layer uses 32 filters with a 5x5 kernel size and 1x1 strides. This layer serves to extract fundamental features such as edges, corners, textures, and color gradients, which form the building blocks for deeper layers to build more complex representations. In contrast to AlexNet's original design, which processes high-resolution 227x227x3 images using an 11x11 kernel with 4 strides to significantly reduce spatial dimensions and capture large patterns, our approach adapts to the smaller 32x32x3 CIFAR-10 images. To maintain efficiency without excessive downscaling, we reduced the kernel size from 11x11 to 5x5 and set a stride of 1, ensuring appropriate feature extraction tailored to the lower-resolution input.
 
 ```python
+from tensorflow.keras.layers import Conv2D, BatchNormalization
+
 #First convolution layer with 32 filters, 5x5 kernel size, and 1x1 strides
 t=Conv2D(filters=32, kernel_size=5, strides=1, padding='valid', activation='relu', name='Conv_2D_1' )(inputs)
 #First batch normalization layer
@@ -116,6 +120,8 @@ t=BatchNormalization(name='Batch_Norm_2')(t)
 ### Max Pooling Layer 1
 
 ```python
+from tensorflow.keras.layers import MaxPooling2D, Dropout
+
 #First max pooling layer with 3x3 pool size and 2x2 strides
 t=MaxPooling2D(pool_size=(3,3), strides=2, padding='valid', name='Max_Pool_1')(t)
 #First drop out layer
@@ -150,6 +156,8 @@ t=Dropout(rate=0.4, name='Drop_Out_2')(t)
 
 ### Fully Connected (Dense) Layer 1
 ```python
+from tensorflow.keras.layers import Flatten, Dense
+
 #Define first fully connected layer
 #Flatten layer
 y1=Flatten(name='Flatten_y1')(t)
@@ -162,7 +170,6 @@ y1=Dropout(rate=0.4, name='Drop_Out_y1')(y1)
 ### Fully Connected (Dense) Layer 2
 ```python
 #Define second fully connected layer
-
 #Dense layer
 y2=Dense(4096, activation='relu', kernel_initializer='glorot_uniform', name='Dense_y2')(y2)
 #Drop out layer
@@ -171,6 +178,8 @@ y2=Dropout(rate=0.4, name='Drop_Out_y2')(y2)
 
 ### Output Layer
 ```python
+from tensorflow.keras.models import Model
+
 #Define output layer and model
 outputs=Dense(10, activation='softmax', name='Output_Model')(y2)
 model=Model(inputs, outputs)
