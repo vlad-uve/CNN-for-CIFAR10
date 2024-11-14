@@ -76,8 +76,6 @@ The following regularization methods were incorporated to minimize overfitting a
 * Dropout
 * Early Stopping
 
-* Batch Normalization: This technique normalizes activations for each mini-batch, speeding up and stabilizing training by reducing internal covariate shifts.
-* Dropout: A 0.4 dropout rate was used on fully connected layers, randomly setting 40% of neurons to zero during training to prevent over-reliance on specific nodes and encourage robust feature learning.
 * Early Stopping: This method monitors the model's performance on a validation data set to halt training once performance begins to deteriorate, preventing it from overfitting and memorizing noise in the training data.
 
 The CNN model was defined using the Keras Functional API, it consists of multiple layers, including convolutional layers, activation functions, pooling layers, and fully connected layers. Below is a detailed overview of the model architecture:
@@ -86,11 +84,6 @@ The CNN model was defined using the Keras Functional API, it consists of multipl
 
 The input to the model is a batch of images with a shape of (32, 32, 3), i.e., 32x32 pixels with 3 color channels, RGB, as specified by the CIFAR-10 dataset and seen from the training image and testing image sets.
 
-* Reduced kernel sizes: The kernel sizes are set to 5x5 and 3x3 windows due to the lower resolution of the CIFAR-10 images and the dataset's relatively small size.
-* Fewer number of filters: The number of filters in the convolutional layers was reduced to 32, 96, and 256 filters to optimize computational efficiency.
-* Small stride size: A stride size of 1 was used in the convolution layers to preserve spatial resolution of the unput data.
-
- 
 ```python
 from tensorflow.keras.layers import Input
 
@@ -101,8 +94,7 @@ inputs=Input(shape=(32,32,3), name='Input_Data')
 ### Convolution Layer 1
 The first convolutional layer uses 32 filters with a 5x5 kernel size and 1x1 strides. This layer serves to extract fundamental features such as edges, corners, textures, and color gradients, which form the building blocks for deeper layers to build more complex representations. In contrast to AlexNet's original design, which processes high-resolution 227x227x3 images using an 11x11 kernel with 4 strides to significantly reduce spatial dimensions and capture large patterns, our approach adapts to the smaller 32x32x3 CIFAR-10 images. To maintain efficiency without excessive downscaling, we reduced the kernel size from 11x11 to 5x5 and set a stride of 1, ensuring appropriate feature extraction tailored to the lower-resolution input.
 
-
-As the size of the given data is much less than the AlexNet's input data, i.e., the given images have size 32x32x3 whileas the AlexNet's input is 227x227x3, hence, significant simplification is required. First of all, I reduced the first convolution layer's kernel size from 11x11 to 5x5. Because this layer serves to heavily reduce the input data's dimension, but in our case, it is not required. Similarly, I used 3x3 kernel in the second convolution layer due to the same reason. The smaller kernel size should be a good simplification.
+We add batch normalization technique immidiately after each convolution layer or activation layer to normalizes activations for each mini-batch, speeding up and stabilizing training. It helps by reducing internal covariate shifts and enabling the model to learn faster with less sensitivity to weight initialization.
 
 ```python
 from tensorflow.keras.layers import Conv2D, BatchNormalization
@@ -113,8 +105,8 @@ t=Conv2D(filters=32, kernel_size=5, strides=1, padding='valid', activation='relu
 t=BatchNormalization(name='Batch_Norm_1')(t)
 ```
 
-
 ### Convolution Layer 2
+The second convolutional layer builds upon the features extracted by the first layer to deepen and refine feature extraction. It captures more complex patterns and combinations of these features, enhancing the network’s ability to recognize more complex structures within the data. By adding this layer, we increase the network's capacity to further refine the spatial context of previously learned features. To achieve this refinement, we narrow down the convolution window to a 3x3 kernel size and increase the number of filters to 96, enabling the detection of more detailed and nuanced patterns in the input data.
 
 ```python
 #Second convolution layer with 96 filters, 3x3 kernel size, and 1x1 strides
@@ -124,6 +116,9 @@ t=BatchNormalization(name='Batch_Norm_2')(t)
 ```
 
 ### Max Pooling Layer 1
+The first max pooling layer is applied after the second convolutional layer to reduce the spatial dimensions of the feature maps while preserving the most prominent features essential for accurate image recognition. By focusing on the strongest activations, this layer ensures that key patterns and structures are retained. Additionally, as the network progresses through consecutive convolutional layers, reducing the size of the feature maps helps maintain a balance between model complexity and computational efficiency, preventing an excessive number of parameters and optimizing training performance. 
+
+?????????A 0.4 dropout rate was used on fully connected layers, randomly setting 40% of neurons to zero during training to prevent over-reliance on specific nodes and encourage robust feature learning.
 
 ```python
 from tensorflow.keras.layers import MaxPooling2D, Dropout
@@ -136,6 +131,8 @@ t=Dropout(rate=0.4, name='Drop_Out_1')(t)
 
 
 ### Convolution Layer 3
+
+
 ```python
 #Third layer of convolution with 256 filters, 3x3 kernel size, and 1x1 strides
 t=Conv2D(filters=256, kernel_size=3, strides=1, padding='same', activation='relu', name='Conv_2D_3')(t)
@@ -144,6 +141,7 @@ t=BatchNormalization(name='Batch_Norm_3')(t)
 ```
 
 ### Convolution Layer 4
+
 ```python
 #Forth layer of convolution with 96 filters, 3x3 kernel size, and 1x1 strides
 t=Conv2D(filters=96, kernel_size=3, strides=1, padding='same', activation='relu', name='Conv_2D_4')(t)
@@ -152,6 +150,7 @@ t=BatchNormalization(name='Batch_Norm_4')(t)
 ```
 
 ### Max Pooling Layer 2
+
 ```python
 #Second max pooling layer with 3x3 pool size and 2x2 strides
 t=MaxPooling2D(pool_size=(3,3), strides=2, padding='valid', name='Max_Pool_2')(t)
@@ -161,6 +160,7 @@ t=Dropout(rate=0.4, name='Drop_Out_2')(t)
 
 
 ### Fully Connected (Dense) Layer 1
+
 ```python
 from tensorflow.keras.layers import Flatten, Dense
 
@@ -174,6 +174,8 @@ y1=Dropout(rate=0.4, name='Drop_Out_y1')(y1)
 ```
 
 ### Fully Connected (Dense) Layer 2
+
+
 ```python
 #Define second fully connected layer
 #Dense layer
@@ -183,6 +185,8 @@ y2=Dropout(rate=0.4, name='Drop_Out_y2')(y2)
 ```
 
 ### Output Layer
+
+
 ```python
 from tensorflow.keras.models import Model
 
