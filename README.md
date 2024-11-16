@@ -67,10 +67,6 @@ For this project, we implemented a Convolutional Neural Network (CNN) inspired b
 * Fewer convolutional layers
 * Fewer fully connected layers
 
-
-* Fewer convolutional layers: The architecture was simplified by reducing the number of convolutional layers to 4. This modification, compared to AlexNet's deeper structure, helped decrease both the model size and the number of parameters.
-* Fewer fully connected layers: The number of fully connected (dense) layers was reduced to 2 from the original AlexNet design to further decrease model size and complexity.
-
 The following regularization methods were incorporated to minimize overfitting and enhance the model's accuracy:
 * Batch Normalization
 * Dropout
