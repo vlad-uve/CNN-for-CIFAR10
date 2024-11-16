@@ -92,7 +92,7 @@ inputs=Input(shape=(32,32,3), name='Input_Data')
 ```
 
 ### Convolution Layer 1
-The first convolutional layer uses 32 filters with a 5x5 kernel size and 1x1 strides. This layer serves to extract fundamental features such as edges, corners, textures, and color gradients, which form the building blocks for deeper layers to build more complex representations. In contrast to AlexNet's original design, which processes high-resolution 227x227x3 images using an 11x11 kernel with 4 strides to significantly reduce spatial dimensions and capture large patterns, our approach adapts to the smaller 32x32x3 CIFAR-10 images. To maintain efficiency without excessive downscaling, we reduced the kernel size from 11x11 to 5x5 and set a stride of 1, ensuring appropriate feature extraction tailored to the lower-resolution input.
+The first convolutional layer uses 32 filters with a 5x5 kernel size and 1x1 strides. This layer serves to extract general patterns and fundamental features such as edges, corners, textures, and color gradients, which form the building blocks for deeper layers to build more complex representations. In contrast to AlexNet's original design, which processes high-resolution 227x227x3 images using an 11x11 kernel with 4 strides to significantly reduce spatial dimensions and capture large patterns, our approach adapts to the smaller 32x32x3 CIFAR-10 images. To maintain efficiency without excessive downscaling, we reduced the kernel size from 11x11 to 5x5 and set a stride of 1, ensuring appropriate feature extraction tailored to the lower-resolution input.
 
 We add batch normalization technique immidiately after each convolution layer or activation layer to normalizes activations for each mini-batch, speeding up and stabilizing training. It helps by reducing internal covariate shifts and enabling the model to learn faster with less sensitivity to weight initialization.
 
@@ -106,7 +106,7 @@ t=BatchNormalization(name='Batch_Norm_1')(t)
 ```
 
 ### Convolution Layer 2
-The second convolutional layer builds upon the features extracted by the first layer to deepen and refine feature extraction. It captures more complex patterns and combinations of these features, enhancing the network’s ability to recognize more complex structures within the data. By adding this layer, we increase the network's capacity to further refine the spatial context of previously learned features. To achieve this refinement, we narrow down the convolution window to a 3x3 kernel size and increase the number of filters to 96, enabling the detection of more detailed and nuanced patterns in the input data.
+The second convolutional layer builds upon the features extracted by the first layer to deepen and refine feature extraction. It captures more complex patterns and combinations of these features unique to each class, enhancing the network’s ability to recognize more complex structures within the data. By adding this layer, we increase the network's capacity to further refine the spatial context of previously learned features. To achieve this refinement, we narrow down the convolution window to a 3x3 kernel size and increase the number of filters to 96, enabling the detection of more detailed and nuanced patterns in the input data.
 
 ```python
 #Second convolution layer with 96 filters, 3x3 kernel size, and 1x1 strides
@@ -116,9 +116,9 @@ t=BatchNormalization(name='Batch_Norm_2')(t)
 ```
 
 ### Max Pooling Layer 1
-The first max pooling layer is applied after the second convolutional layer to reduce the spatial dimensions of the feature maps while preserving the most prominent features essential for accurate image recognition. By focusing on the strongest activations, this layer ensures that key patterns and structures are retained. Additionally, as the network progresses through consecutive convolutional layers, reducing the size of the feature maps helps maintain a balance between model complexity and computational efficiency, preventing an excessive number of parameters and optimizing training performance. 
+The first max pooling layer is applied after the second convolutional layer to reduce the spatial dimensions of the feature maps while preserving the most prominent features crucial for accurate image recognition. As the network progresses through consecutive convolutional layers, reducing the size of the feature maps helps balance model complexity and computational efficiency, preventing an excessive number of parameters and optimizing training performance. When working with CIFAR-10 data, which consists of relatively small images, a 3x3 pooling window with a stride of 2 strikes a balance between computational efficiency and model accuracy by focusing on the strongest activations, thereby retaining key structures and patterns essential for effective feature extraction.
 
-?????????A 0.4 dropout rate was used on fully connected layers, randomly setting 40% of neurons to zero during training to prevent over-reliance on specific nodes and encourage robust feature learning.
+Dropout with a 0.4 rate was utilized as a regularization technique to combat overfitting by randomly deactivating 40% of the neurons during training. This process effectively "drops out" their contribution for each iteration, which helps prevent the model from becoming overly dependent on specific nodes. By doing so, the network is encouraged to learn more diverse, robust, and generalizable features, thereby enhancing overall model performance and minimizing the risk of overfitting.
 
 ```python
 from tensorflow.keras.layers import MaxPooling2D, Dropout
@@ -131,7 +131,7 @@ t=Dropout(rate=0.4, name='Drop_Out_1')(t)
 
 
 ### Convolution Layer 3
-
+With additional convolution layers, the CNN continues to extract and refine features that distinguish each class.
 
 ```python
 #Third layer of convolution with 256 filters, 3x3 kernel size, and 1x1 strides
@@ -141,6 +141,8 @@ t=BatchNormalization(name='Batch_Norm_3')(t)
 ```
 
 ### Convolution Layer 4
+We opted for only 4 convolution layers instead of AlexNet's original deeper architecture because, with smaller input images like those in CIFAR-10, fewer layers are typically sufficient to effectively extract all necessary features. This approach also helps manage computational demands, making it suitable for the limited resources available on the Google Colab platform. By reducing the number of layers, we decreased both the model size and the number of parameters.
+
 
 ```python
 #Forth layer of convolution with 96 filters, 3x3 kernel size, and 1x1 strides
@@ -160,6 +162,7 @@ t=Dropout(rate=0.4, name='Drop_Out_2')(t)
 
 
 ### Fully Connected (Dense) Layer 1
+The Flatten layer transforms the multi-dimensional output of convolutional layers into a one-dimensional vector, enabling fully connected layers to process extracted features for classifying images.
 
 ```python
 from tensorflow.keras.layers import Flatten, Dense
