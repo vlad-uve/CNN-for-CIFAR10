@@ -13,6 +13,7 @@ The model was trained and evaluated on the CIFAR-10 dataset, a widely used bench
 For this project, the CIFAR-10 dataset was downloaded directly from Keras (https://keras.io/api/datasets/cifar10/). 
 ```python
 from tensorflow import keras
+import numpy as np
 
 #Load train and test CIFAR-10 data set from Keras
 #x_train and y_train are the training data set
@@ -225,47 +226,55 @@ earlyStopping_callback = EarlyStopping(monitor='val_accuracy', patience=5)
 The model was trained with a batch size of 32 and a maximum of 150 epochs to accommodate the relatively small dataset, ensuring sufficient iterations for the network to learn complex patterns. A 10% validation split from the training dataset was used to monitor performance during training. Thus, by employing a smaller batch size and training for longer epochs, combined with the Early Stopping callback, the training process was optimized for both efficiency and adaptability, ensuring effective learning while avoiding overfitting.
 
 ```python
-#Train the model on the trainig data set using 32 batch size, 150 epochs,0.1 validation split, and early stopping call back
-history=model.fit(x_train, y_train, batch_size=32, epochs=150, validation_split=0.1, callbacks=[earlyStopping_callback], verbose=2)
+#Train the model on the trainig data set
+#Using 32 batch size, 150 epochs,0.1 validation split, and early stopping call back
+history=model.fit(x_train, y_train, batch_size=32, epochs=150,
+                  validation_split=0.1, callbacks=[earlyStopping_callback], verbose=2)
 ```
 
-![image](https://github.com/user-attachments/assets/d03dfe7b-e4ed-4786-9509-2ece25337b73)
+### Analyzing the Model Performance
+The Early Stopping got triggered at 41st epoch. At the final epoch, the model achieves the metric as follows:
+*   Training Accuracy = 0.90
+*   Validation Accuracy = 0.84
+*   Training Loss = 0.09
+*   Validation Loss = 0.75
+
+```python
+import pandas as pd
+
+#Create data frame of model metric history
+metric = pd.DataFrame(history.history)
+
+#Print the final model metrics
+print(metric.tail(1))
+```
+
+A graph below shows training and validation accuracy curves, which reflect a stable learning process. Both curves show a steady increase during the initial epochs, and they are eventually plateauing without significant fluctuations. The convergence of the curves, with minimal and consistent discrepancy between their values, suggests that the model is learning effectively from the training data and is generalizing well to unseen data.
+
+![image](https://github.com/user-attachments/assets/fc291d6d-7efa-483b-baca-ffdb73c727b9)
 
 
 
+## Model Evaluation
+### Testing Metrics
+We evaluated the model on the testing dataset and obtained the following metrics:
+* Testing Accuracy = 0.83
+* Testing Loss = 0.80
 
+These results provide further evidence that the model generalizes well to unseen data. Additionally, the achieved accuracy aligns with the minimum target accuracy of 0.8, which was established as a benchmark during the model development process.
 
-## Model Tested
+```python
+#Testing loss and accuracy
+test_loss, test_acc=model.evaluate(x_test, y_test)
+```
 
-Testing Accuracy = 0.83
-Testing Loss = 0.80
+### Prediction Demonstration
+The model's prediction capability was demonstrated using a random sample of images from the testing dataset. It successfully classified 9 out of 10 images, aligning with expectations, as the validation and testing accuracies were approximately 80%. Below is a sample figure showcasing the selected images, along with their true and predicted classes, providing a clear illustration of the model's performance.
 
 
 ![image](https://github.com/user-attachments/assets/42de68fe-8dd8-46ab-b1ae-115cb844a83e)
 
-
-
 ## Results
-
-
-Tips:
-- Start with only a few of a layers and check if the network can learn.
-- Add units and layers progressively.
-- Kernels that are too large or too much pooling will reduce the size of layer ouputs
-- Try Batch Norm and Dropout
-- If you don't reproduce the exact architecture, that is fine. Explain what you changed and why!.
-- Functional API!
-
-As the size of the given data is much less than the AlexNet's input data, i.e., the given images have size 32x32x3 whileas the AlexNet's input is 227x227x3, hence, significant simplification is required. First of all, I reduced the first convolution layer's kernel size from 11x11 to 5x5. Because this layer serves to heavily reduce the input data's dimension, but in our case, it is not required. Similarly, I used 3x3 kernel in the second convolution layer due to the same reason. The smaller kernel size should be a good simplification.
-
-Morover, the complexity of the given data is much less than that used as an input in the classical AlexNet archtecture. Therefore, the number of frames was reduced as well, 32 vs 96, and 96 vs 256, and 129 vs or 384. size in the second convlolution -the data input was already in smaller in size.
-
-As the given input is much closer to the output of the classical AlexNet, the padding and convolution were applied without high strides, and padding was used just once to fit the sizes of the AlexNet outputs.
-
-Finally, I used kernel 1x1 and only 1 convolution in the last convolution sequance to seriously minimize number of model parameters and computational time. Fully conected layers sizes and their quontity had also be simlified to respect lesser complexity of the model and reduce necessary computational perfromance.
-
-During the training stage, I realized that the usage of batch normalization and dropout rate was necessary to improve learning speed and handlle with overfitting that apparently occurs because of the simplicity. The achieved acuracy is 0.8091, validation accuracy is 0.7988 and test accuracy 0.7797. As the difference between the accuracy values is not significant, hence, the overfitting was avoided.
-
-"Adam" optimizer was chosen as it demonstrated better performance in terms of val_Accuracy. Moreover, a model with smaller batch size showed better results. Furthermore, schedules for learning rate were used to assit the model disrupt a plateau of constant accuracy.
+Our model achieved a testing accuracy of 0.8 on the CIFAR-10 dataset. While this accuracy is lower than the original AlexNet's performance on larger datasets like ImageNet, it demonstrates a strong capacity to generalize effectively within the constraints of a simplified architecture tailored for smaller, lower-resolution images.
 
 
