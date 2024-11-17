@@ -186,43 +186,46 @@ The output layer in our CNN is a dense layer consisting of 10 neurons, correspon
 outputs=Dense(10, activation='softmax', name='Output_Model')(y2)
 ```
 
-### Compile Model
+### Model Definition
+At the final step, we define the complete trainable model by connecting the Input layer to the Output layer through the intermediate layers, creating a fully integrated and cohesive architecture.
+
 ```python
 from tensorflow.keras.models import Model
 
 #Define model
 model=Model(inputs, outputs)
+```
+
+### Architecture Diagram
+The image below illustrates the resultant model architecture, detailing the sequence of layers, their types, as well as the input and output sizes for each layer.
+
+![image](https://github.com/user-attachments/assets/beb2ecfe-da45-406c-8ad2-1b0e55070be4)
+
+
+## Model Compilation
+We compiled the model using the Adam optimizer with a learning rate of 0.0001 for efficient and adaptive gradient-based optimization. The categorical cross-entropy loss function was chosen to handle the multi-class classification task of the CIFAR-10 dataset. Accuracy was selected as the evaluation metric to track how frequently the model's predictions align with the true labels, providing a clear measure of performance during training.
+
+```python
 #Compile Model
 model.compile(optimizer=Adam(learning_rate=0.0001), loss='categorical_crossentropy', metrics=["accuracy"])
 ```
 
-
-
-### Model Summary and Architecture Diagram
-```
-#Create a model
-model=CNN_model()
-
-#Print model summary
-model.summary()
-print("\n\n\n")
-
-#Plot model architecture
-keras.utils.plot_model(model=model,show_shapes=True, show_layer_names=True)
-```
-
-
 ## Model Training
+### Callbacks
 
-### Monitoring
+We monitored the training process with TensorBoard to vizualize key metrics, for example: loss, accuracy, and learning rate; as well as inspect the model architecture and analyze training behavior.
 
-
+For this purpose we loaded and launched tensorboard:
 ```python
+#Load tensorboard extension
+%load_ext tensorboard
 
 #Initialize Tensor Board - logs
 log_dir = "logs/fit/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-
 ```
+
+
+
 
 * Early Stopping: This method monitors the model's performance on a validation data set to halt training once performance begins to deteriorate, preventing it from overfitting and memorizing noise in the training data.
 
@@ -232,7 +235,7 @@ from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
 
 #Define callbacks
 tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
-#reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=3, min_lr=0.000001, verbose=1)
+
 earlyStopping_callback = EarlyStopping(monitor='val_accuracy', patience=5)
 ```
 
