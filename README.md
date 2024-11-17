@@ -77,7 +77,6 @@ The following regularization methods were incorporated to minimize overfitting a
 The CNN model was defined using the Keras Functional API, it consists of multiple layers, including convolutional layers, activation functions, pooling layers, and fully connected layers. Below is a detailed overview of the model architecture:
 
 ### Input Layer
-
 The input to the model is a batch of images with a shape of (32, 32, 3), i.e., 32x32 pixels with 3 color channels, RGB, as specified by the CIFAR-10 dataset and seen from the training image and testing image sets.
 
 ```python
@@ -125,7 +124,6 @@ t=MaxPooling2D(pool_size=(3,3), strides=2, padding='valid', name='Max_Pool_1')(t
 t=Dropout(rate=0.4, name='Drop_Out_1')(t)
 ```
 
-
 ### Convolution Layer 3
 With additional convolution layers, the CNN continues to extract and refine features that distinguish each class.
 
@@ -138,7 +136,6 @@ t=BatchNormalization(name='Batch_Norm_3')(t)
 
 ### Convolution Layer 4
 We opted for only 4 convolution layers instead of AlexNet's original deeper architecture because, with smaller input images like those in CIFAR-10, fewer layers are typically sufficient to effectively extract all necessary features. This approach also helps manage computational demands, making it suitable for the limited resources available on the Google Colab platform. By reducing the number of layers, we decreased both the model size and the number of parameters.
-
 
 ```python
 #Forth layer of convolution with 96 filters, 3x3 kernel size, and 1x1 strides
@@ -156,9 +153,10 @@ t=MaxPooling2D(pool_size=(3,3), strides=2, padding='valid', name='Max_Pool_2')(t
 t=Dropout(rate=0.4, name='Drop_Out_2')(t)
 ```
 
-
 ### Fully Connected (Dense) Layer 1
 The Flatten layer transforms the multi-dimensional output of convolutional layers into a one-dimensional vector, enabling fully connected layers to process extracted features for classifying images.
+
+We implemented two consecutive dense layers with 2048 and 512 neurons, respectively, after the Flatten layer, which outputs 3456 parameters, to balance model complexity and minimize the risk of overfitting. Compared to AlexNet's three dense layers with 4096, 4096, and 1000 neurons, our design with two layers of 2048 and 512 neurons is more appropriate for a compact dataset like CIFAR-10. It provides sufficient capacity to learn complex relationships and patterns from the features extracted by the convolutional layers while avoiding excessive parameters. This approach ensures computational efficiency, making the model suitable for the resource-constrained Google Colab platform while maintaining high performance.
 
 ```python
 from tensorflow.keras.layers import Flatten, Dense
@@ -174,7 +172,6 @@ y1=Dropout(rate=0.4, name='Drop_Out_y1')(y1)
 
 ### Fully Connected (Dense) Layer 2
 
-
 ```python
 #Define second fully connected layer
 #Dense layer
@@ -184,26 +181,67 @@ y2=Dropout(rate=0.4, name='Drop_Out_y2')(y2)
 ```
 
 ### Output Layer
+The output layer in our CNN is a dense layer consisting of 10 neurons, corresponding to the 10 classes in the dataset, with a softmax activation function. This layer converts the model’s outputs into probabilities, allowing for clear class predictions while ensuring the sum of probabilities equals 1. The softmax probabilities are used with the categorical cross-entropy loss function to calculate the model's error during training, guiding it to improve classification accuracy. This structure enables the network to make accurate, interpretable predictions for multi-class classification tasks like CIFAR-10
 
+```python
+#Define output layer
+outputs=Dense(10, activation='softmax', name='Output_Model')(y2)
+```
 
+### Compile Model
 ```python
 from tensorflow.keras.models import Model
 
-#Define output layer and model
-outputs=Dense(10, activation='softmax', name='Output_Model')(y2)
+#Define model
 model=Model(inputs, outputs)
+#Compile Model
+model.compile(optimizer=Adam(learning_rate=0.0001), loss='categorical_crossentropy', metrics=["accuracy"])
 ```
 
 
 
+### Model Summary and Architecture Diagram
+```
+#Create a model
+model=CNN_model()
+
+#Print model summary
+model.summary()
+print("\n\n\n")
+
+#Plot model architecture
+keras.utils.plot_model(model=model,show_shapes=True, show_layer_names=True)
+```
+
+
+## Model Training
+
+### Monitoring
+
+
+```python
+
+#Initialize Tensor Board - logs
+log_dir = "logs/fit/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+
+```
+
+```python
+from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
+
+#Define callbacks
+tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
+#reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=3, min_lr=0.000001, verbose=1)
+earlyStopping_callback = EarlyStopping(monitor='val_accuracy', patience=5)
+```
 
 
 
+```python
+#Train the model on the trainig data set using 32 batch size, 150 epochs,0.1 validation split, and early stopping call back
+history=model.fit(x_train, y_train, batch_size=32, epochs=150, validation_split=0.1, callbacks=[tensorboard_callback, earlyStopping_callback], verbose=2)
 
-
-
-## Model Trained
-
+```
 
 ![image](https://github.com/user-attachments/assets/d03dfe7b-e4ed-4786-9509-2ece25337b73)
 
