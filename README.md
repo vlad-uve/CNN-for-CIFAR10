@@ -211,40 +211,22 @@ model.compile(optimizer=Adam(learning_rate=0.0001), loss='categorical_crossentro
 ```
 
 ## Model Training
-### Callbacks
-
-We monitored the training process with TensorBoard to vizualize key metrics, for example: loss, accuracy, and learning rate; as well as inspect the model architecture and analyze training behavior.
-
-For this purpose we loaded and launched tensorboard:
-```python
-#Load tensorboard extension
-%load_ext tensorboard
-
-#Initialize Tensor Board - logs
-log_dir = "logs/fit/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-```
-
-
-
-
-* Early Stopping: This method monitors the model's performance on a validation data set to halt training once performance begins to deteriorate, preventing it from overfitting and memorizing noise in the training data.
-
+### Early Stopping
+We managed the training process and model performance on a validation dataset by implementing the Early Stopping callback, which halted training once the monitored metric, validation loss, had stopped improving 5 consecutive steps, effectively preventing overfitting and saving computational resources.
 
 ```python
-from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
+from tensorflow.keras.callbacks import EarlyStopping
 
-#Define callbacks
-tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
-
+#Define early stopping callback
 earlyStopping_callback = EarlyStopping(monitor='val_accuracy', patience=5)
 ```
 
-
+## Training the CNN Model
+The model was trained with a batch size of 32 and a maximum of 150 epochs to accommodate the relatively small dataset, ensuring sufficient iterations for the network to learn complex patterns. A 10% validation split from the training dataset was used to monitor performance during training. Thus, by employing a smaller batch size and training for longer epochs, combined with the Early Stopping callback, the training process was optimized for both efficiency and adaptability, ensuring effective learning while avoiding overfitting.
 
 ```python
 #Train the model on the trainig data set using 32 batch size, 150 epochs,0.1 validation split, and early stopping call back
-history=model.fit(x_train, y_train, batch_size=32, epochs=150, validation_split=0.1, callbacks=[tensorboard_callback, earlyStopping_callback], verbose=2)
-
+history=model.fit(x_train, y_train, batch_size=32, epochs=150, validation_split=0.1, callbacks=[earlyStopping_callback], verbose=2)
 ```
 
 ![image](https://github.com/user-attachments/assets/d03dfe7b-e4ed-4786-9509-2ece25337b73)
