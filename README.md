@@ -72,8 +72,6 @@ The following regularization methods were incorporated to minimize overfitting a
 * Dropout
 * Early Stopping
 
-* Early Stopping: This method monitors the model's performance on a validation data set to halt training once performance begins to deteriorate, preventing it from overfitting and memorizing noise in the training data.
-
 The CNN model was defined using the Keras Functional API, it consists of multiple layers, including convolutional layers, activation functions, pooling layers, and fully connected layers. Below is a detailed overview of the model architecture:
 
 ### Input Layer
@@ -225,6 +223,9 @@ keras.utils.plot_model(model=model,show_shapes=True, show_layer_names=True)
 log_dir = "logs/fit/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
 
 ```
+
+* Early Stopping: This method monitors the model's performance on a validation data set to halt training once performance begins to deteriorate, preventing it from overfitting and memorizing noise in the training data.
+
 
 ```python
 from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
