@@ -11,6 +11,7 @@ The model was trained and evaluated on the CIFAR-10 dataset, a widely used bench
 
 ### Loading the CIFAR-10 Dataset
 For this project, the CIFAR-10 dataset was downloaded directly from Keras (https://keras.io/api/datasets/cifar10/). 
+
 ```python
 from tensorflow import keras
 import numpy as np
@@ -20,6 +21,7 @@ import numpy as np
 #x_test and y_test are the testing dataset
 (x_train, y_train), (x_test, y_test) = keras.datasets.cifar10.load_data()
 ```
+
 ### Exploring the Shapes
 The downloaded dataset consists of both images and labels, which are stored in arrays with the following shapes:
 * Training images (x_train): A NumPy array of shape (50000, 32, 32, 3), where 50,000 images are 32x32 pixels in size with 3 color channels (RGB).
@@ -39,18 +41,20 @@ print('Shape of the testing label set: {}'.format(y_test.shape)) #(10000, 1)
 
 ### Displaying Sample Images
 To better understand the dataset, the following visualization displays the first 5 sample images of each class from the CIFAR-10 training set, along with their corresponding class labels.
-![image](https://github.com/user-attachments/assets/a9cd3358-5b42-4aef-9655-25165692d17c)
+
+![image](https://github.com/user-attachments/assets/aff706e7-f417-4bc3-9678-b794712839a2)
 
 ### Preprocessing
 In this step, to ensure optimal training performance, CIFAR-10 dataset is prepared for training by performing the following key operations:
 
 1. Normalizing the Image Data: The pixel values of the images are scaled from the range [0, 255] to [0, 1]. This step improves model convergence and stability during training.
+   
 ```python
 #Data normalization
 x_train=x_train/255. #normalaized training image set
 x_test=x_test/255. #normalaized testing image set
-
 ```
+
 2. One-Hot Encoding of Class Labels: The original CIFAR-10 labels, representing 10 classes as integers (e.g., 0 for airplane, 1 for automobile, etc.), were converted into a binary matrix using one-hot encoding. Each label is transformed into a binary vector with 10 elements, where a 1 is placed in the position of the correct class, and all other positions are set to 0. This encoding method prevents the model from inferring any ordinal relationship between the classes and ensures it learns to distinguish each class independently. Consequently, the shapes of the encoded training and testing label sets become (50000, 10) and (10000, 10), respectively.
 
 ```python
@@ -203,8 +207,7 @@ model=Model(inputs, outputs)
 ### Architecture Diagram
 The image below illustrates the resultant model architecture, detailing the sequence of layers, their types, as well as the input and output sizes for each layer.
 
-![image](https://github.com/user-attachments/assets/beb2ecfe-da45-406c-8ad2-1b0e55070be4)
-
+![image](https://github.com/user-attachments/assets/2351c51e-d5e9-4253-b52c-31b114efe251)
 
 ## Model Compilation
 We compiled the model using the Adam optimizer with a learning rate of 0.0001 for efficient and adaptive gradient-based optimization. The categorical cross-entropy loss function was chosen to handle the multi-class classification task of the CIFAR-10 dataset. Accuracy was selected as the evaluation metric to track how frequently the model's predictions align with the true labels, providing a clear measure of performance during training.
@@ -262,9 +265,7 @@ print(metric.tail(1))
 
 A graph below shows training and validation accuracy curves, which reflect a stable learning process. Both curves show a steady increase during the initial epochs, and they are eventually plateauing without significant fluctuations. The convergence of the curves, with minimal and consistent discrepancy between their values, suggests that the model is learning effectively from the training data and is generalizing well to unseen data.
 
-![image](https://github.com/user-attachments/assets/fc291d6d-7efa-483b-baca-ffdb73c727b9)
-
-
+![image](https://github.com/user-attachments/assets/3f353fd5-74b4-4cb6-9965-256cb9862a8a)
 
 ## Model Evaluation
 ### Testing Metrics
@@ -286,8 +287,7 @@ print('Testing loss: {}'.format(round(test_loss,4)))
 ### Prediction Demonstration
 The model's prediction capability was demonstrated using a random sample of images from the testing dataset. It successfully classified 9 out of 10 images, aligning with expectations, as the validation and testing accuracies were approximately 84% and 83%. Below is a sample figure showcasing the selected images, along with their true and predicted classes, providing a clear illustration of the model's performance.
 
-
-![image](https://github.com/user-attachments/assets/42de68fe-8dd8-46ab-b1ae-115cb844a83e)
+![image](https://github.com/user-attachments/assets/73283850-cedb-4bc9-a2fe-8f657e10953a)
 
 ## Results
 This project successfully implemented an AlexNet-inspired Convolutional Neural Network (CNN) to classify images from the CIFAR-10 dataset. By adapting AlexNet's architecture to the constraints of smaller, lower-resolution images, we achieved a testing accuracy of 86%, exceeding the minimum target accuracy of 80%. The model design included key improvements, such as reducing the number of layers, optimizing kernel sizes and filter counts, and incorporating modern regularization techniques like dropout and batch normalization. These enhancements allowed the model to maintain strong performance while remaining computationally efficient and suitable for resource-constrained environments like Google Colab.
